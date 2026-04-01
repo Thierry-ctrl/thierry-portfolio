@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "alwaysStrict": true,
+    "baseUrl": ".",
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "noEmitOnError": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strictBindCallApply": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true,
+    "target": "ES2022",
+    "types": ["node", "vite/client"],
+    "useUnknownInCatchVariables": true
+  },
+  "include": ["src/**/*", "vite.config.ts"],
+  "exclude": ["dist", "node_modules"]
+}
