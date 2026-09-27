@@ -3,14 +3,28 @@ import AxeBuilder from "@axe-core/playwright";
 
 test("project filters and scope disclosures work", async ({ page }) => {
   await page.goto("/");
-  await expect(page.locator(".project-card")).toHaveCount(4);
+  await expect(page.locator(".project-card")).toHaveCount(5);
   await page.getByRole("button", { name: "Healthcare", exact: true }).click();
-  await expect(page.locator(".project-card")).toHaveCount(1);
-  await page.locator("summary").click();
-  await expect(page.locator("details")).toHaveAttribute("open", "");
-  await expect(page.locator("details")).toContainText("not patient outcomes");
+  await expect(page.locator(".project-card")).toHaveCount(2);
+  await page
+    .locator(".project-card")
+    .filter({ hasText: "eBuzima utilization systems" })
+    .locator("summary")
+    .click();
+  await expect(
+    page
+      .locator(".project-card")
+      .filter({ hasText: "eBuzima utilization systems" })
+      .locator("details"),
+  ).toHaveAttribute("open", "");
+  await expect(
+    page
+      .locator(".project-card")
+      .filter({ hasText: "eBuzima utilization systems" })
+      .locator("details"),
+  ).toContainText("not patient outcomes");
   await page.getByRole("button", { name: "All", exact: false }).click();
-  await expect(page.locator(".project-card")).toHaveCount(4);
+  await expect(page.locator(".project-card")).toHaveCount(5);
 });
 
 test("quick navigation supports keyboard search and dismissal", async ({
@@ -82,7 +96,11 @@ test("page and navigation dialog have no automated WCAG AA violations", async ({
   page,
 }) => {
   await page.goto("/");
-  await page.evaluate(() => Promise.all(document.getAnimations().map(animation => animation.finished)));
+  await page.evaluate(() =>
+    Promise.all(
+      document.getAnimations().map((animation) => animation.finished),
+    ),
+  );
   expect(
     (
       await new AxeBuilder({ page })

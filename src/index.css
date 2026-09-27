@@ -1310,3 +1310,41 @@ footer span:nth-child(2) {
     display: none;
   }
 }
+
+/* Impuruza connects surveillance monitoring to operational follow-up. */
+.impuruza {
+  background-color: #142d2b;
+}
+.featured-project {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+}
+.featured-project .project-visual {
+  height: 100%;
+  min-height: 260px;
+  border-bottom: 0;
+  border-right: 1px solid var(--line);
+}
+.featured-project .signal-bars {
+  height: 190px;
+  bottom: 80px;
+}
+.featured-project .project-body > p:not(.project-status) {
+  min-height: 0;
+}
+@media (max-width: 720px) {
+  .featured-project {
+    display: block;
+  }
+  .featured-project .project-visual {
+    height: 185px;
+    min-height: 0;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .featured-project .signal-bars {
+    height: 120px;
+    bottom: 30px;
+  }
+}

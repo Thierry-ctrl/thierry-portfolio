@@ -23,50 +23,70 @@ const projects = [
   {
     id: "01",
     category: "Healthcare",
+    status: "Monitoring & ticket workflow implemented",
+    name: "A signal should not go unnoticed.",
+    subtitle: "Impuruza · disease-surveillance monitoring",
+    description:
+      "Connecting DHIS2 health signals to operational follow-up: a scheduled Python monitor identifies signals awaiting verification and passes reports through n8n to create Zammad tickets.",
+    detail:
+      "The implemented workflow connects DHIS2 → Python monitor → n8n → Zammad. Scheduled polling, paginated retrieval, metadata decoding and signal-age checks identify signals needing attention; webhook delivery feeds the ticket workflow so a team can follow up. This combines monitoring, integration and human action in one operational process.",
+    tags: ["Python", "DHIS2", "n8n", "Zammad", "Webhooks"],
+    visual: "impuruza",
+    note: "Signal → follow-up",
+    second: "Public-health workflow automation",
+  },
+  {
+    id: "02",
+    category: "Healthcare",
     status: "Professional contribution",
     name: "Making health data usable.",
     subtitle: "eBuzima utilization systems",
     description:
-      "Contributing to the pipelines and utilization systems that turn healthcare records into structured, usable data across Rwanda.",
+      "Building daily snapshots of aggregate eBuzima utilization data, with scheduled ingestion, concurrent facility processing and checks that make reporting data easier to trust.",
     detail:
-      "Work spans ingestion, transformation and data-quality workflows. The pipeline context is roughly 10,500 rows per day across approximately 450 facilities; these describe data scope, not patient outcomes or product adoption.",
-    tags: ["Python", "Prefect", "PostgreSQL", "dbt"],
+      "The workflow combines scheduled Prefect tasks, paginated API retrieval, PostgreSQL upserts and post-ingestion quality checks. Separate backfill, re-ingestion and missing-detail repair tools support recovery. Roughly 10,500 rows per day across approximately 450 facilities describe data scope, not patient outcomes or product adoption.",
+    tags: ["Python", "Prefect", "PostgreSQL", "Data quality"],
     visual: "health",
     note: "~10,500 rows / day",
     second: "~450 facilities in scope",
   },
   {
-    id: "02",
+    id: "03",
     category: "Environment",
     status: "Professional contribution",
     name: "Signals for cleaner air.",
     subtitle: "Rwanda air-quality data · REMA / PurpleAir",
     description:
-      "Working with environmental data and air-quality workflows in the Rwanda REMA / PurpleAir context, with a focus on reliable inputs and useful downstream data.",
+      "Turning REMA and PurpleAir sensor data into repeatable analysis: combining source files, checking completeness, verifying averages and generating reporting charts.",
     detail:
-      "Contributions span data engineering and data quality for environmental monitoring. The engineering emphasis is on checking sensor-derived data and preparing it for analysis; no ownership of national deployments or measured environmental outcomes is claimed.",
-    tags: ["Python", "Data quality", "Environmental data"],
+      "Python scripts prepare environmental readings, compare time periods and locations, and produce tables and visualizations. Weather-data retrieval adds context. Completeness checks make connectivity gaps visible rather than treating missing readings as clean evidence. This describes analysis and reporting work, not a measured improvement in air quality.",
+    tags: ["Python", "Data completeness", "Reporting", "Visualization"],
     visual: "air",
     note: "Sensor → usable data",
     second: "Rwanda air-quality work",
   },
   {
-    id: "03",
+    id: "04",
     category: "Automation",
     status: "Professional contribution",
     name: "Less friction. Better systems.",
-    subtitle: "APIs, support & automation",
+    subtitle: "Operational automation & issue-tracking data",
     description:
-      "Building FastAPI APIs and contributing to support and automation systems that connect data workflows with practical operational needs.",
+      "Automating the work around the data: issue-tracking migration, scheduled processing, quality checks and recovery tools. Connecting systems is only one part of making a workflow dependable.",
     detail:
-      "Work spans backend interfaces, workflow automation and AI solutions. My focus is making systems easier to operate and maintain, with clear data boundaries and attention to failure cases. Internal implementations and endpoints remain private.",
-    tags: ["FastAPI", "Python", "APIs", "Automation"],
+      "An Airtable-to-NocoDB issue-tracking importer maps fields and dates, checks the target schema, detects source and destination duplicates, and defaults to a dry run before batched API writes. Across other projects, automation also covers scheduled monitoring, webhook handoffs, pipeline repair and repeatable reporting. FastAPI supports the API layer; n8n and Zammad connect Impuruza monitoring to ticket-based follow-up.",
+    tags: [
+      "Python",
+      "Airtable → NocoDB",
+      "Deduplication",
+      "Dry-run validation",
+    ],
     visual: "api",
     note: "Connect. Validate. Automate.",
-    second: "Backend & workflow engineering",
+    second: "Migration, validation & recovery",
   },
   {
-    id: "04",
+    id: "05",
     category: "Product",
     status: "Prototype · in development",
     name: "From workflow to product.",
@@ -221,9 +241,9 @@ export default function Home() {
               <em>Real-world systems.</em>
             </h1>
             <p className="hero-description">
-              I build data pipelines, APIs and practical AI solutions — with a
-              focus on reliability, automation and the realities of working in
-              Rwanda and beyond.
+              I build data systems, operational automations and practical AI
+              solutions — with a focus on reliability, automation and the
+              realities of working in Rwanda and beyond.
             </p>
             <div className="hero-actions">
               <a className="button primary" href="#work">
@@ -282,19 +302,29 @@ export default function Home() {
                   onClick={() => setFilter(item)}
                 >
                   {item}
-                  {item === "All" && <span>04</span>}
+                  {item === "All" && (
+                    <span>{String(projects.length).padStart(2, "0")}</span>
+                  )}
                 </button>
               ),
             )}
           </div>
           <p className="sr-only" role="status">
-            {filter === "All" ? 4 : 1} projects shown
+            {
+              projects.filter(
+                (project) => filter === "All" || project.category === filter,
+              ).length
+            }{" "}
+            projects shown
           </p>
           <div className="project-grid">
             {projects
               .filter((p) => filter === "All" || p.category === filter)
               .map((project) => (
-                <article className="project-card" key={project.id}>
+                <article
+                  className={`project-card ${project.visual === "impuruza" ? "featured-project" : ""}`}
+                  key={project.id}
+                >
                   <div
                     className={`project-visual ${project.visual}`}
                     aria-hidden="true"
@@ -383,12 +413,14 @@ export default function Home() {
                   work.
                 </li>
                 <li>
-                  Develop FastAPI APIs and practical AI solutions alongside
-                  support and workflow automation systems.
+                  Build operational automations around scheduled monitoring,
+                  data movement, validation and recovery; develop FastAPI
+                  interfaces and practical AI solutions where needed.
                 </li>
                 <li>
-                  Contribute to healthcare / eBuzima utilization systems and
-                  Rwanda air-quality work involving REMA and PurpleAir data.
+                  Contribute to eBuzima utilization pipelines, Impuruza / DHIS2
+                  signal monitoring and repeatable Rwanda air-quality analysis
+                  using REMA and PurpleAir data.
                 </li>
                 <li>
                   Connect backend engineering, data reliability and operational
@@ -415,10 +447,11 @@ export default function Home() {
                 system people can actually use.
               </p>
               <p>
-                My work brings together data engineering, backend development
-                and AI. In healthcare, environmental monitoring and product
-                prototyping, I look for clear interfaces, trustworthy data and
-                automation that solves a practical problem.
+                My work brings together data engineering, operational
+                automation, backend development and AI. In healthcare,
+                environmental monitoring and product prototyping, I look for
+                clear interfaces, trustworthy data and automation that solves a
+                practical problem.
               </p>
               <p>
                 Rwanda is my starting point. I want to build technology that
@@ -442,15 +475,16 @@ export default function Home() {
                 [
                   "02",
                   "Pipelines & quality",
-                  "Prefect · dbt · Data validation",
+                  "Prefect · dbt · Quality checks · Recovery workflows",
                 ],
                 [
                   "03",
-                  "APIs & automation",
-                  "FastAPI · Backend integration · Workflow automation",
+                  "Operational automation",
+                  "Scheduled Python jobs · Webhooks · Airtable / NocoDB",
                 ],
+                ["04", "APIs & integration", "FastAPI · DHIS2 · n8n · Zammad"],
                 [
-                  "04",
+                  "05",
                   "Applied systems",
                   "AI solutions · System design · Product prototyping",
                 ],
